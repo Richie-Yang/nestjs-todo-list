@@ -1,10 +1,22 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { SequelizeModule } from '@nestjs/sequelize';
+import { AppController, TodoController } from './controllers';
+import { AppService, TodoService } from './services';
+import { Todo } from './models';
 
 @Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [
+    SequelizeModule.forRoot({
+      dialect: 'mysql',
+      host: 'localhost',
+      port: 3306,
+      username: 'root',
+      password: 'root',
+      database: 'test',
+      models: [Todo],
+    }),
+  ],
+  controllers: [AppController, TodoController],
+  providers: [AppService, TodoService],
 })
 export class AppModule {}
