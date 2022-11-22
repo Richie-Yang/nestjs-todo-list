@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Todo } from '../models';
+import { TodoDto } from '../dto';
+import { Filter } from '../types';
 
 @Injectable()
 export class TodoService {
@@ -10,10 +12,12 @@ export class TodoService {
     return this.TodoModel.findAll();
   }
 
-  async findOne(id: string): Promise<Todo> {
-    return this.TodoModel.findOne({
-      where: { id },
-    });
+  async findById(id: string): Promise<Todo> {
+    return this.TodoModel.findByPk(id);
+  }
+
+  async findOne(filter: Filter): Promise<Todo> {
+    return this.TodoModel.findOne(filter);
   }
 
   async remove(id: string): Promise<void> {
@@ -21,7 +25,16 @@ export class TodoService {
     return todo.destroy();
   }
 
-  // async create(data: Todo): Promise<Todo> {
-  //   return this.TodoModel.create();
-  // }
+  async create(data: TodoDto.Create): Promise<Todo> {
+    const { title, detail, status, createdBy } = data;
+    return this.TodoModel.create({ title, detail, status, createdBy });
+  }
+
+  async update(id: string, data: TodoDto.Update): Promise<boolean> {
+    const todo = await this.findById(id);
+    if (!todo) return false;
+
+    await this.TodoModel.update(data, null);
+    return true;
+  }
 }

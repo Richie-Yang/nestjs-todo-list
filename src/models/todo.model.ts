@@ -1,12 +1,5 @@
 import { Column, Model, Table } from 'sequelize-typescript';
-
-enum TODO_STATUS {
-  PENDING = 'PENDING',
-  COMPLETED = 'COMPLETED',
-  ONGOING = 'ONGOING',
-  UPCOMING = 'UPCOMING',
-  CLOSED = 'CLOSED',
-}
+import { TODO_STATUS } from '../variables';
 
 @Table
 export class Todo extends Model {
